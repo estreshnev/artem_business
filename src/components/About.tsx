@@ -10,6 +10,12 @@ const About = () => {
             <p className="text-gray-600 mb-6">
               Мы - команда профессиональных сантехников с более чем 10-летним опытом работы в сфере водоснабжения и канализации загородных домов. Наша миссия - обеспечить каждый дом качественными инженерными системами, которые прослужат долгие годы.
             </p>
+            <p className="text-gray-600 mb-6">
+              Работаем по Вологде и области. Выезд на участок, оценка, помощь в закупке и доставке материалов. Качество, надёжность, гарантия.
+            </p>
+            <p className="text-gray-600 mb-6 italic">
+              *Газ — в сотрудничестве с лицензированной подрядной организацией.
+            </p>
             <div className="space-y-4">
               <div className="flex items-center">
                 <div className="bg-blue-500 rounded-full p-2 mr-4">
@@ -40,18 +46,18 @@ const About = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="relative h-64">
               <Image
-                src="/images/plumber-1.jpg"
+                src="/about/about-1.jpg"
                 alt="Наша команда за работой"
                 fill
-                className="object-cover rounded-lg"
+                className="object-cover rounded-lg shadow-lg"
               />
             </div>
             <div className="relative h-64 mt-8">
               <Image
-                src="/images/plumber-2.jpg"
+                src="/about/about-2.jpg"
                 alt="Установка оборудования"
                 fill
-                className="object-cover rounded-lg"
+                className="object-cover rounded-lg shadow-lg"
               />
             </div>
           </div>
