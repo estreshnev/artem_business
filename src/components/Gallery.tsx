@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -46,28 +46,39 @@ const Gallery = () => {
     setSelectedIndex(newIndex);
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!selectedImage) return;
-    
-    switch (e.key) {
-      case 'ArrowLeft':
-        handlePrevious();
-        break;
-      case 'ArrowRight':
-        handleNext();
-        break;
-      case 'Escape':
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (selectedImage) {
+      if (e.key === 'ArrowRight') {
+        setSelectedIndex((prev) => (prev + 1) % images.length);
+      } else if (e.key === 'ArrowLeft') {
+        setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+      } else if (e.key === 'Escape') {
         setSelectedImage(null);
-        break;
+      }
     }
-  };
+  }, [selectedImage, images.length]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const images = document.querySelectorAll('.gallery-image');
+      images.forEach((image) => {
+        const rect = image.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        if (isVisible) {
+          image.classList.add('fade-in');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
     window.addEventListener('keydown', handleKeyDown);
+    handleScroll(); // Initial check
+
     return () => {
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedImage, selectedIndex]);
+  }, [handleKeyDown]);
 
   return (
     <section id="gallery" className="py-20 bg-gray-50">
