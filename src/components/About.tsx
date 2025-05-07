@@ -49,7 +49,9 @@ const About = () => {
                 src="/about/about-1.jpg"
                 alt="Наша команда за работой"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover rounded-lg shadow-lg"
+                quality={85}
               />
             </div>
             <div className="relative h-64 mt-8">
@@ -57,7 +59,9 @@ const About = () => {
                 src="/about/about-2.jpg"
                 alt="Установка оборудования"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover rounded-lg shadow-lg"
+                quality={85}
               />
             </div>
           </div>

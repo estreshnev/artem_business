@@ -22,7 +22,7 @@ const Header = () => {
           priority
           sizes="100vw"
           className="object-cover object-left md:object-center"
-          quality={100}
+          quality={90}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-blue-800/50 to-blue-600/50">
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />

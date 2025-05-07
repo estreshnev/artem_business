@@ -1,11 +1,13 @@
 "use client";
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [isClient, setIsClient] = useState(false);
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   const images = [
     { src: '/gallery/photo1.jpg', alt: 'Фото 1' },
@@ -59,8 +61,16 @@ const Gallery = () => {
   }, [selectedImage, images.length]);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const handleScroll = () => {
-      const images = document.querySelectorAll('.gallery-image');
+      if (!galleryRef.current) return;
+      
+      const images = galleryRef.current.querySelectorAll('.gallery-image');
       images.forEach((image) => {
         const rect = image.getBoundingClientRect();
         const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
@@ -78,7 +88,11 @@ const Gallery = () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [handleKeyDown, isClient]);
+
+  if (!isClient) {
+    return null; // or a loading state
+  }
 
   return (
     <section id="gallery" className="py-20 bg-gray-50">
@@ -86,19 +100,21 @@ const Gallery = () => {
         <h2 className="text-4xl font-bold text-center mb-12">Наши работы</h2>
         
         {/* Horizontal scrollable container */}
-        <div className="relative">
+        <div className="relative" ref={galleryRef}>
           <div className="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory">
             {images.map((image, index) => (
               <div
                 key={index}
-                className="flex-none w-80 h-80 relative snap-center cursor-pointer"
+                className="flex-none w-80 h-80 relative snap-center cursor-pointer gallery-image"
                 onClick={() => handleImageClick(image.src, index)}
               >
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                  quality={85}
                 />
               </div>
             ))}
@@ -120,8 +136,10 @@ const Gallery = () => {
                 src={selectedImage}
                 alt="Enlarged view"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 className="object-contain"
                 priority
+                quality={90}
               />
               {/* Navigation buttons */}
               <button
