@@ -40,7 +40,7 @@ const Header = () => {
             <Link href="#faq" className="text-white hover:text-blue-300 transition-colors">FAQ</Link>
             <Link href="#contact" className="text-white hover:text-blue-300 transition-colors">Контакты</Link>
             <a
-              href="https://vk.com/volproektmontazh"
+              href="https://vk.com/vologdaproectmontage"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white hover:text-blue-300 transition-colors flex items-center"
@@ -123,7 +123,7 @@ const Header = () => {
               Контакты
             </Link>
             <a
-              href="https://vk.com/volproektmontazh"
+              href="https://vk.com/vologdaproectmontage"
               target="_blank"
               rel="noopener noreferrer"
               className="text-white text-xl hover:text-blue-300 transition-colors flex items-center"
