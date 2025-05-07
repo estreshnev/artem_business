@@ -7,6 +7,7 @@ const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [isClient, setIsClient] = useState(false);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const galleryRef = useRef<HTMLDivElement>(null);
 
   const images = [
@@ -51,14 +52,22 @@ const Gallery = () => {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (selectedImage) {
       if (e.key === 'ArrowRight') {
-        setSelectedIndex((prev) => (prev + 1) % images.length);
+        const newIndex = (selectedIndex + 1) % images.length;
+        setSelectedImage(images[newIndex].src);
+        setSelectedIndex(newIndex);
       } else if (e.key === 'ArrowLeft') {
-        setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+        const newIndex = (selectedIndex - 1 + images.length) % images.length;
+        setSelectedImage(images[newIndex].src);
+        setSelectedIndex(newIndex);
       } else if (e.key === 'Escape') {
         setSelectedImage(null);
       }
     }
-  }, [selectedImage, images.length]);
+  }, [selectedImage, selectedIndex, images]);
+
+  const handleImageLoad = (src: string) => {
+    setLoadedImages(prev => new Set([...prev, src]));
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -91,7 +100,7 @@ const Gallery = () => {
   }, [handleKeyDown, isClient]);
 
   if (!isClient) {
-    return null; // or a loading state
+    return null;
   }
 
   return (
@@ -108,14 +117,23 @@ const Gallery = () => {
                 className="flex-none w-80 h-80 relative snap-center cursor-pointer gallery-image"
                 onClick={() => handleImageClick(image.src, index)}
               >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-                  quality={85}
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className={`object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ${
+                      loadedImages.has(image.src) ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    quality={85}
+                    priority={index < 4}
+                    onLoad={() => handleImageLoad(image.src)}
+                  />
+                  {!loadedImages.has(image.src) && (
+                    <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
+                  )}
+                </div>
               </div>
             ))}
           </div>
